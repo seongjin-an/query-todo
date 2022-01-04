@@ -1,24 +1,36 @@
-import React, {useCallback, useEffect} from "react";
-import {useMutation, useQuery, useQueryClient, UseQueryResult} from "react-query";
+import React, {useCallback, useEffect, useState} from "react";
+import {
+    focusManager,
+    QueryCache,
+    QueryClient,
+    useMutation,
+    useQuery,
+    useQueryClient,
+    UseQueryResult
+} from "react-query";
 import axios, {AxiosResponse} from "axios";
 import TodoListItem from "./TodoListItem";
 import {ITodo} from "../types";
 import styled from "@emotion/styled";
 import TodoInsert from "./TodoInsert";
+import useTodos from "../hooks/useTodos";
 
 const TodoList = () => {
-    const queryClient = useQueryClient();
-    // api
-    const getTodos = () => axios.get('/todos')
+    console.log('render todoList')
 
-    // Queries
-    const {isSuccess, data, isError}: UseQueryResult<AxiosResponse<ITodo[], Error>> = useQuery('todos', getTodos)
+    const queryClient = useQueryClient()
+
+
+    const {isSuccess, data, isError, refetch} = useTodos<ITodo[]>()
 
     return (
         <StyledTodoListBase>
-            <StyledTodoHeader>일정관리</StyledTodoHeader>
+            <StyledTodoHeader onClick={() => {
+                const todos: ITodo[] | undefined = queryClient.getQueryData('todos')
+                console.log('todos:', todos)
+            }}>일정관리</StyledTodoHeader>
             <StyledTodoContent>
-                <TodoInsert/>
+                <TodoInsert refetch={refetch}/>
                 <StyledTodoListContainer>
                     {data?.data.map((todo: ITodo, index: number) => (
                         <TodoListItem key={todo.id} todo={todo}/>

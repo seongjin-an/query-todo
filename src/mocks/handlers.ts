@@ -16,9 +16,32 @@ let todos: ITodo[] = [
         content: 'todo1',
         completed: false
     }
-
+]
+export let fakes: ITodo[] = [
+    {
+        id: 'fake3',
+        content: 'fake3',
+        completed: false
+    },
+    {
+        id: 'fake2',
+        content: 'fake2',
+        completed: true
+    },
+    {
+        id: 'fake1',
+        content: 'fake1',
+        completed: false
+    }
 ]
 export const handlers = [
+    rest.get('/fake', (req, res, ctx)=>{
+        return res(
+            ctx.json(
+                fakes
+            )
+        )
+    }),
     rest.get('/todos', (req, res, ctx) => {
         return res(
             ctx.json(

@@ -1,11 +1,14 @@
-import React, {MouseEvent, ChangeEvent, useCallback, useState} from "react";
+import React, {MouseEvent, ChangeEvent, useCallback, useState, useEffect} from "react";
 import styled from "@emotion/styled";
 import {MdAdd} from 'react-icons/md'
 import {ITodo} from "../types";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {useMutation, useQueryClient} from "react-query";
-
-const TodoInsert = () => {
+import {QueryObserverResult, RefetchOptions, RefetchQueryFilters} from "react-query/types/core/types";
+interface ITodoInsert {
+    refetch: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<AxiosResponse<ITodo[], Error>, unknown>>
+}
+const TodoInsert: React.FC<ITodoInsert> = ({refetch}) => {
     // Access the client
     const queryClient = useQueryClient()
     // api
@@ -18,13 +21,14 @@ const TodoInsert = () => {
         },
     })
 
+
     const  [value, setValue] = useState<string>('')
     const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
     }, [])
     return (
         <StyledInsertForm>
-            <StyledInput placeholder="something to do" value={value} onChange={onChange}/>
+            <StyledInput placeholder="something to do" value={value} onChange={onChange} onClick={()=>refetch()}/>
             <StyledInputButton type="submit" onClick={(event: MouseEvent<HTMLButtonElement>) => {
                 event.preventDefault()
                 console.log('submit')
