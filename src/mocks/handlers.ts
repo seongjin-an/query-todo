@@ -1,5 +1,7 @@
-import {rest, RestRequest} from 'msw'
+import {PathParams, rest, RestRequest} from 'msw'
 import {ITodo} from "../types";
+import posts from "./data";
+import {IPost} from "../hooks/usePost";
 let todos: ITodo[] = [
     {
         id: 'todo3',
@@ -34,6 +36,7 @@ export let fakes: ITodo[] = [
         completed: false
     }
 ]
+let localPosts: IPost[] = posts
 export const handlers = [
     rest.get('/fake', (req, res, ctx)=>{
         return res(
@@ -99,4 +102,31 @@ export const handlers = [
             }),
         )
     }),
+
+    rest.get('/posts', (req, res, ctx) => {
+        console.log('fake posts request')
+        return res(
+            ctx.status(200),
+            ctx.json(localPosts)
+        )
+    }),
+
+    rest.get('/post/:postId', (req, res, ctx) => {
+        const { postId } = req.params
+        console.log('fake post request, postId:', postId)
+        return res(
+            ctx.status(200),
+            ctx.json(localPosts.find(post => post.id === parseInt(postId as string)))
+        )
+    }),
+
+    rest.put('/post', (req:RestRequest<IPost, PathParams>, res, ctx) => {
+        console.log('req.body:', req.body)
+        console.log('req.body.id:', req.body.id)
+        const imsi = localPosts.map(post => post.id === req.body.id ? req.body : post)
+        localPosts = imsi
+        return res(
+            ctx.status(200)
+        )
+    })
 ]
