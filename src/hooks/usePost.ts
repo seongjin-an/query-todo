@@ -22,6 +22,7 @@ export default function usePost(postId: number): UseQueryResult<IPost, Error> {
             queryKey: ["post", postId],
             queryFn: () => getPostById(postId),
             refetchOnWindowFocus: false,
+            refetchInterval: 1000 * 60 * 60
             // enabled: false
         });
 }

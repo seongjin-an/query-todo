@@ -128,5 +128,12 @@ export const handlers = [
         return res(
             ctx.status(200)
         )
+    }),
+    rest.delete('/post/:id', (req, res, ctx) => {
+        const { id } = req.params
+        localPosts = localPosts.filter(post => post.id !== parseInt(id as string))
+        return res(
+            ctx.status(200)
+        )
     })
 ]

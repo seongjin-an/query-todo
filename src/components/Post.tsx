@@ -37,7 +37,7 @@ const Post: React.FC<IPostProps> = ({ postId, setPostId }) => {
     const modifyMutation = useMutation(modifyPost, {
         onSuccess: () => {
             // Invalidate and refetch
-            queryClient.invalidateQueries(['posts'])
+            queryClient.invalidateQueries(['post', postId])
         },
     })
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -54,6 +54,20 @@ const Post: React.FC<IPostProps> = ({ postId, setPostId }) => {
         const post = {...data, title: title, body: body}
         console.log('post:', post)
         modifyMutation.mutate(post as IPost)
+        // setPostId(-1)
+        setMode(0);
+    }
+    const deletePost = (id: number) => axios.delete(`/post/${id}`)
+    const deleteMutation = useMutation(deletePost, {
+        onSuccess: () => {
+            queryClient.invalidateQueries(['post', postId])
+            queryClient.invalidateQueries(['posts'])
+        }
+    })
+    const handleDelete = (event: MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        deleteMutation.mutate(postId)
+        setMode(0)
         setPostId(-1)
     }
     return (
@@ -63,6 +77,7 @@ const Post: React.FC<IPostProps> = ({ postId, setPostId }) => {
                     Back
                 </a>
                 <button onClick={()=>setMode(1)}>update</button>
+                <button onClick={handleDelete}>delete</button>
             </div>
             {!postId || status === "loading" ? (
                 "Loading..."
