@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import styled from '@emotion/styled/macro';
 
 import TodoList from './features/TodoList';
@@ -39,12 +39,14 @@ interface Props {
 }
 
 const CalendarDay: React.FC<Props> = ({ date }) => {
+    console.log('render calendarDay !!!!')
     const today = new Date();
 
-    const selectedDate = useRecoilValue(selectedDateState);
+    // const selectedDate = useRecoilValue(selectedDateState);
     const todoList = useRecoilValue(filteredTodoListState(date));
 
-    const setSelectedDate = useSetRecoilState(selectedDateState);
+    // const setSelectedDate = useSetRecoilState(selectedDateState);
+    const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState)
     const setTodoFormModalOpen = useSetRecoilState(todoFormModalOpenState);
     const setTodoStatisticsModalOpen = useSetRecoilState(todoStatisticsModalOpenState);
 

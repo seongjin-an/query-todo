@@ -88,4 +88,4 @@ const StyledTodoListItem = styled.div`
     background: #f8f9fa;
   }
 `
-export default TodoListItem;
+export default React.memo(TodoListItem);

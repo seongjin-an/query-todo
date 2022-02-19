@@ -29,6 +29,7 @@ export const filteredTodoListState = atomFamily<ITodo[], Date>({
         key: 'filteredTodoListState/default',
         get: (selectedDate) => ({get}) => {
             const todoList = get(todoListState);
+            todoList.forEach(todo => isSameDay(todo.date, selectedDate) ? console.log('selectedDate:',selectedDate, ' / todo.date:', todo.date) : null)
             return todoList.filter(todo => isSameDay(todo.date, selectedDate))
         }
     })

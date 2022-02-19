@@ -2,23 +2,24 @@ import {PathParams, rest, RestRequest} from 'msw'
 import {ITodo} from "../types";
 import posts from "./data";
 import {IPost} from "../hooks/usePost";
-let todos: ITodo[] = [
-    {
-        id: 'todo3',
-        content: 'todo3',
-        completed: false
-    },
-    {
-        id: 'todo2',
-        content: 'todo2',
-        completed: true
-    },
-    {
-        id: 'todo1',
-        content: 'todo1',
-        completed: false
-    }
-]
+import {createBulkTodos} from "../components/TodoList";
+// let todos: ITodo[] = [
+//     {
+//         id: 'todo3',
+//         content: 'todo3',
+//         completed: false
+//     },
+//     {
+//         id: 'todo2',
+//         content: 'todo2',
+//         completed: true
+//     },
+//     {
+//         id: 'todo1',
+//         content: 'todo1',
+//         completed: false
+//     }
+// ]
 export let fakes: ITodo[] = [
     {
         id: 'fake3',
@@ -37,6 +38,7 @@ export let fakes: ITodo[] = [
     }
 ]
 let localPosts: IPost[] = posts
+let todos: ITodo[] = createBulkTodos()
 export const handlers = [
     rest.get('/fake', (req, res, ctx)=>{
         return res(

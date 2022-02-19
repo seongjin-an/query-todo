@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from "react";
 import styled from "@emotion/styled/macro";
-import { useRecoilValue, useRecoilState, useRecoilCallback } from "recoil";
+import {useRecoilValue, useRecoilState, useRecoilCallback, useSetRecoilState} from "recoil";
 import Modal from "../../Modal";
 import {ITodo, selectedDateState, todoListState} from "../TodoList/atom";
 import {todoFormModalOpenState} from "./atom";
@@ -13,7 +13,7 @@ const ModalBody = styled.div`
   padding: 8px;
 `;
 
-const Date = styled.small`
+const Date0 = styled.small`
   display: block;
   color: #C9C8CC;
 `;
@@ -43,18 +43,31 @@ const Card = styled.div`
 `;
 
 
-const TodoFormModal: React.FC = () => {
+const TodoFormModal: React.FC = ({}) => {
+    console.log('render todoformmodal')
+
     // const [isOpen, setIsOpen] = useState<boolean>(false);
     const [todo, setTodo] = useState<string>('')
     const [isOpen, setIsOpen] = useRecoilState(todoFormModalOpenState)
     const selectedDate =  useRecoilValue(selectedDateState)
+    const setSelectedDate = useSetRecoilState(selectedDateState)
     const todoList = useRecoilValue(todoListState)
+    const setTodoList = useSetRecoilState(todoListState)
 
     const addTodo = useRecoilCallback(({snapshot, set}) => () => {
         const todoList = snapshot.getLoadable(todoListState).getValue()
-        const newTodo: ITodo = {id: uuidv4(), content: todo, done: false, date: selectedDate}
+        const _selectedDate = snapshot.getLoadable(selectedDateState).getValue()
+        const newTodo: ITodo = {id: uuidv4(), content: todo, done: false, date: new Date(selectedDate)}
+        console.log('addTodo todoList:', todoList);
+        console.log('newTodo:', newTodo)
         set<ITodo[]>(todoListState, [...todoList, newTodo])
-    }, [todo, selectedDate, todoList])
+    }, [todo, todoList])
+
+    // const addTodo = () => {
+    //     const _date = new Date(selectedDate)
+    //     setTodoList(prev => [...prev, {id: uuidv4(), content: todo, done: false, date: _date}])
+    // }
+
     const reset = () => {
         setTodo('')
     }
@@ -74,7 +87,7 @@ const TodoFormModal: React.FC = () => {
         <Modal isOpen={isOpen} onClose={handleClose}>
             <ModalBody>
                 <Card>
-                    <Date>{getSimpleDateFormat(selectedDate)}</Date>
+                    <Date0>{getSimpleDateFormat(selectedDate)}</Date0>
                     <InputTodo placeholder="new event" onKeyPress={handleKeyPress} value={todo} onChange={handleChange}/>
                 </Card>
             </ModalBody>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import styled from '@emotion/styled/macro';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 
@@ -105,6 +105,7 @@ const MONTHS = ["January", "February", "March", "April", "May", "June",
 ];
 
 const Calendar: React.FC = () => {
+    console.log('render Calendar!!!')
     // const [selectedDate, setSelectedDate] = useState<Date>(new Date()); // 선택한 날짜 상태
     const selectedDate = useRecoilValue(selectedDateState)
     const todoList = useRecoilValue(todoListState)
@@ -122,12 +123,15 @@ const Calendar: React.FC = () => {
         })
     }, [selectedDate]);
 
+    useEffect(() => {
+        if(todoList){
+            console.log('todoList!!!:', todoList)
+        }
+    }, [todoList])
+
     const selectDate = (date: Date) => {
         setSelectedDate(date);
     }
-    const padArr:number[] = []
-    padArr.push(firstDay.getDay())
-    console.log('Array(firstDay.getDay()):', Array(firstDay.getDay()).fill(0))
     const pad = () => Array(firstDay.getDay()).fill(0).map((value:number, index) => <TableData key={`pad_${value+index}`}/>)
 
     const range = () => Array(lastDay.getDate()).fill(0).map((d: number, index) => {
@@ -141,11 +145,12 @@ const Calendar: React.FC = () => {
     const render = () => {
         const items = [...pad(), ...range()];
         const weeks = Math.ceil(items.length / 7);
-        return Array(weeks).fill(0).map((week: number, index) => (
-            <tr key={`week_${week}_${index}`}>
-                {items.slice((week+index) * 7, (week+index) * 7 + 7)}
+        return Array(weeks).fill(0).map((week: number, index) => {
+            console.log(`week: ${week} / index: ${index}`)
+            return <tr key={`week_${week}_${index}`}>
+                {items.slice((week + index) * 7, (week + index) * 7 + 7)}
             </tr>
-        ));
+        });
     }
 
     return (

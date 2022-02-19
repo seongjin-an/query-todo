@@ -15,6 +15,14 @@ import styled from "@emotion/styled";
 import TodoInsert from "./TodoInsert";
 import useTodos from "../hooks/useTodos";
 
+export const createBulkTodos = (): ITodo[] => {
+    return Array(2500).fill(0).map((_, index) => ({
+        id: index+'',
+        content: `할 일 ${index}`,
+        completed: false
+    }))
+}
+
 const TodoList = () => {
     console.log('render todoList')
 
@@ -22,6 +30,7 @@ const TodoList = () => {
 
 
     const {isSuccess, data, isError, refetch} = useTodos<ITodo[]>()
+    // const [data, setData] = useState(createBulkTodos)
 
     return (
         <StyledTodoListBase>
@@ -31,8 +40,10 @@ const TodoList = () => {
             }}>일정관리</StyledTodoHeader>
             <StyledTodoContent>
                 <TodoInsert refetch={refetch}/>
+                {/*<TodoInsert/>*/}
                 <StyledTodoListContainer>
                     {data?.data.map((todo: ITodo, index: number) => (
+                    // {data.map((todo: ITodo, index: number) => (
                         <TodoListItem key={todo.id} todo={todo}/>
                     ))}
                 </StyledTodoListContainer>

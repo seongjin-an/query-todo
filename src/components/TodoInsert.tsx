@@ -6,7 +6,7 @@ import axios, {AxiosResponse} from "axios";
 import {useMutation, useQueryClient} from "react-query";
 import {QueryObserverResult, RefetchOptions, RefetchQueryFilters} from "react-query/types/core/types";
 interface ITodoInsert {
-    refetch: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<AxiosResponse<ITodo[], Error>, unknown>>
+    refetch?: <TPageData>(options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined) => Promise<QueryObserverResult<AxiosResponse<ITodo[], Error>, unknown>>
 }
 const TodoInsert: React.FC<ITodoInsert> = ({refetch}) => {
     // Access the client
@@ -28,7 +28,7 @@ const TodoInsert: React.FC<ITodoInsert> = ({refetch}) => {
     }, [])
     return (
         <StyledInsertForm>
-            <StyledInput placeholder="something to do" value={value} onChange={onChange} onClick={()=>refetch()}/>
+            <StyledInput placeholder="something to do" value={value} onChange={onChange} onClick={()=>refetch!()}/>
             <StyledInputButton type="submit" onClick={(event: MouseEvent<HTMLButtonElement>) => {
                 event.preventDefault()
                 console.log('submit')
